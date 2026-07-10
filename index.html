@@ -152,12 +152,7 @@
       <span style="font-size:14px;color:#C9A84C;margin-right:auto;">←</span>
     </div>
     <div class="section-title">✦ &nbsp; نمونه مدل‌های مو &nbsp; ✦</div>
-    <div class="photo-grid-mini">
-      <div class="photo-card-mini" onclick="openAlbumFromService(&#39;album-pompadour&#39;)"><div class="photo-slot"><div style="font-size:36px;opacity:0.2;">💇</div><div class="photo-slot-text">عکس مدل مو</div></div><div class="photo-shimmer"></div><div class="photo-tag">کلاسیک</div><div class="photo-label">پمپادور</div></div>
-      <div class="photo-card-mini" onclick="openAlbumFromService(&#39;album-fade&#39;)"><div class="photo-slot"><div style="font-size:36px;opacity:0.2;">✂️</div><div class="photo-slot-text">عکس مدل مو</div></div><div class="photo-shimmer"></div><div class="photo-tag">ترند</div><div class="photo-label">فید اسکین</div></div>
-      <div class="photo-card-mini" onclick="openAlbumFromService(&#39;album-undercut&#39;)"><div class="photo-slot"><div style="font-size:36px;opacity:0.2;">💈</div><div class="photo-slot-text">عکس مدل مو</div></div><div class="photo-shimmer"></div><div class="photo-tag">مدرن</div><div class="photo-label">آندرکات</div></div>
-      <div class="photo-card-mini" onclick="openAlbumFromService(&#39;album-taper&#39;)"><div class="photo-slot"><div style="font-size:36px;opacity:0.2;">💇</div><div class="photo-slot-text">عکس مدل مو</div></div><div class="photo-shimmer"></div><div class="photo-tag">محبوب</div><div class="photo-label">تیپر فید</div></div>
-    </div>
+    <div class="photo-grid-mini" id="home-photo-grid"></div>
     <button class="more-btn" onclick="showPage(&#39;gallery&#39;, document.querySelectorAll(&#39;.tab&#39;)[1])">
       <span style="font-size:12px; color:#C9A84C; font-weight:700; letter-spacing:1px;">مشاهده همه مدل‌های مو ←</span>
       <span style="font-size:22px;">💇</span>
@@ -236,20 +231,20 @@
         </div>
       </div>
 
-      <div class="album-card" id="album-taper">
-        <div class="album-header" onclick="toggleAlbum('album-taper')">
+      <div class="album-card" id="album-classic">
+        <div class="album-header" onclick="toggleAlbum('album-classic')">
           <div class="album-header-right">
-            <div class="album-thumb" id="thumb-album-taper"><span style="font-size:22px;">💇</span></div>
+            <div class="album-thumb" id="thumb-album-classic"><span style="font-size:22px;">💇</span></div>
             <div class="album-info">
-              <div class="album-name">تیپر فید</div>
-              <div class="album-count" id="count-album-taper">۰ عکس</div>
+              <div class="album-name">کلاسیک</div>
+              <div class="album-count" id="count-album-classic">۰ عکس</div>
             </div>
           </div>
           <div class="album-arrow" style="font-size:16px;color:#C9A84C;">▾</div>
         </div>
         <div class="album-body">
           <div class="album-divider"></div>
-          <div class="album-photo-grid" id="grid-album-taper"></div>
+          <div class="album-photo-grid" id="grid-album-classic"></div>
         </div>
       </div>
 
@@ -420,9 +415,6 @@
   <img id="lightbox-img" src="" alt="">
   <div class="lightbox-nav">
     <button onclick="lightboxNav(1)" style="background:#1a1a1a;border:1px solid #333;border-radius:50%;width:44px;height:44px;font-size:20px;cursor:pointer;color:#C9A84C;">‹</button>
-    <button onclick="deleteCurrentPhoto()" style="background:#1a1a1a; border:1px solid #333; border-radius:50%; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
-      🗑️
-    </button>
     <button onclick="lightboxNav(-1)" style="background:#1a1a1a;border:1px solid #333;border-radius:50%;width:44px;height:44px;font-size:20px;cursor:pointer;color:#C9A84C;">›</button>
   </div>
   <div class="lightbox-counter" id="lightbox-counter"></div>
@@ -472,26 +464,51 @@ function toggleAlbum(id) {
 
 // photo store: albumId -> [{url, file}]
 // Preloaded photos live permanently in the images/ folder next to this file.
+function mkAlbum(folder, count) {
+  return Array.from({length: count}, (_, i) => ({url: `images/${folder}/${i+1}.jpg`}));
+}
 const albumPhotos = {
-  'album-undercut': [
-    {url:'images/undercut/1.jpg'}, {url:'images/undercut/2.jpg'}, {url:'images/undercut/3.jpg'},
-    {url:'images/undercut/4.jpg'}, {url:'images/undercut/5.jpg'}, {url:'images/undercut/6.jpg'},
-    {url:'images/undercut/7.jpg'}, {url:'images/undercut/8.jpg'}
-  ],
-  'album-buzzcut': [
-    {url:'images/buzzcut/1.jpg'}, {url:'images/buzzcut/2.jpg'}, {url:'images/buzzcut/3.jpg'},
-    {url:'images/buzzcut/4.jpg'}, {url:'images/buzzcut/5.jpg'}, {url:'images/buzzcut/6.jpg'}
-  ],
-  'album-burstfade': [
-    {url:'images/burstfade/1.jpg'}, {url:'images/burstfade/2.jpg'}, {url:'images/burstfade/3.jpg'},
-    {url:'images/burstfade/4.jpg'}, {url:'images/burstfade/5.jpg'}, {url:'images/burstfade/6.jpg'},
-    {url:'images/burstfade/7.jpg'}, {url:'images/burstfade/8.jpg'}
-  ]
+  'album-pompadour': mkAlbum('pompadour', 8),
+  'album-fade':       mkAlbum('fade', 8),
+  'album-undercut':   mkAlbum('undercut', 8),
+  'album-buzzcut':    mkAlbum('buzzcut', 6),
+  'album-french':     mkAlbum('french', 8),
+  'album-sidepart':   mkAlbum('sidepart', 8),
+  'album-midfade':    mkAlbum('midfade', 8),
+  'album-highfade':   mkAlbum('highfade', 8),
+  'album-lowfade':    mkAlbum('lowfade', 8),
+  'album-burstfade':  mkAlbum('burstfade', 8),
+  'album-classic':    mkAlbum('classic', 8)
 };
 
 document.addEventListener('DOMContentLoaded', () => {
   Object.keys(albumPhotos).forEach(renderAlbum);
+  renderHomeGrid();
 });
+
+function renderHomeGrid() {
+  const featured = [
+    {id:'album-pompadour', icon:'💇', tag:'کلاسیک', label:'پمپادور'},
+    {id:'album-fade',      icon:'✂️', tag:'ترند',   label:'فید اسکین'},
+    {id:'album-undercut',  icon:'💈', tag:'مدرن',   label:'آندرکات'},
+    {id:'album-classic',   icon:'💇', tag:'محبوب',  label:'کلاسیک'}
+  ];
+  const grid = document.getElementById('home-photo-grid');
+  grid.innerHTML = '';
+  featured.forEach(f => {
+    const photos = albumPhotos[f.id] || [];
+    const card = document.createElement('div');
+    card.className = 'photo-card-mini';
+    card.onclick = () => openAlbumFromService(f.id);
+    if (photos.length > 0) {
+      card.innerHTML = `<img src="${photos[0].url}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">`;
+    } else {
+      card.innerHTML = `<div class="photo-slot"><div style="font-size:36px;opacity:0.2;">${f.icon}</div><div class="photo-slot-text">عکس مدل مو</div></div>`;
+    }
+    card.innerHTML += `<div class="photo-shimmer"></div><div class="photo-tag">${f.tag}</div><div class="photo-label">${f.label}</div>`;
+    grid.appendChild(card);
+  });
+}
 
 function addPhotos(albumId, input) {
   if (!albumPhotos[albumId]) albumPhotos[albumId] = [];
@@ -540,6 +557,7 @@ function renderAlbum(albumId) {
 
 // ── lightbox ─────────────────────────────────────────
 let lbAlbum = null, lbIndex = 0;
+let lbHistoryPushed = false;
 
 function openLightbox(albumId, index) {
   lbAlbum = albumId;
@@ -547,6 +565,8 @@ function openLightbox(albumId, index) {
   showLightboxPhoto();
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
+  history.pushState({ lightbox: true }, '');
+  lbHistoryPushed = true;
 }
 
 function showLightboxPhoto() {
@@ -564,23 +584,55 @@ function lightboxNav(dir) {
   showLightboxPhoto();
 }
 
+// swipe support (mobile) — swipe left = next photo, swipe right = previous photo
+(function initLightboxSwipe() {
+  const lb = document.getElementById('lightbox');
+  let startX = 0, startY = 0, tracking = false;
+
+  lb.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    tracking = true;
+  }, { passive: true });
+
+  lb.addEventListener('touchend', (e) => {
+    if (!tracking) return;
+    tracking = false;
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const deltaX = endX - startX;
+    const deltaY = endY - startY;
+    // ignore mostly-vertical gestures (scrolling) and small taps
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+    if (deltaX < 0) lightboxNav(1);   // swiped left → next
+    else lightboxNav(-1);             // swiped right → previous
+  }, { passive: true });
+})();
+
 function closeLightbox(e) {
   if (e.target === document.getElementById('lightbox')) closeLightboxBtn();
 }
 function closeLightboxBtn() {
   document.getElementById('lightbox').classList.remove('open');
   document.body.style.overflow = '';
+  if (lbHistoryPushed) {
+    lbHistoryPushed = false;
+    history.back();
+  }
 }
 
-function deleteCurrentPhoto() {
-  if (!lbAlbum) return;
-  albumPhotos[lbAlbum].splice(lbIndex, 1);
-  renderAlbum(lbAlbum);
-  const photos = albumPhotos[lbAlbum];
-  if (!photos.length) return closeLightboxBtn();
-  lbIndex = Math.min(lbIndex, photos.length - 1);
-  showLightboxPhoto();
-}
+// back button closes the lightbox instead of leaving the site
+window.addEventListener('popstate', () => {
+  const lb = document.getElementById('lightbox');
+  if (lb.classList.contains('open')) {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  lbHistoryPushed = false;
+});
+
+
 </script>
 
 
